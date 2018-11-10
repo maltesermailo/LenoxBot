@@ -1,3 +1,4 @@
+const settings = require('../../settings.json');
 exports.run = async (client, msg, args, lang) => {
 	const input = args.slice();
 	const botconfspremiumload = client.botconfs.get('premium');
@@ -5,9 +6,7 @@ exports.run = async (client, msg, args, lang) => {
 	const Discord = require('discord.js');
 
 	if (!input || input.length === 0) return msg.reply(lang.useserverkey_noinput);
-	if (isNaN(input.join(' '))) return msg.reply(lang.useserverkey_error);
-	if (botconfspremiumload.keys.guildkeys.contains(input.join(' '))) return msg.reply(lang.useserverkey_notexist);
-
+	if (!botconfspremiumload.keys.guildkeys.includes(input.join(' '))) return msg.reply(lang.useserverkey_notexist);
 	if (botconfspremiumload.keys.redeemedguildkeys.includes(input.join(' '))) return msg.reply(lang.useserverkey_already);
 
 	if (tableload.premium.status === false) {
@@ -32,9 +31,7 @@ exports.run = async (client, msg, args, lang) => {
 			.setTimestamp()
 			.setColor('#ff0000')
 			.setTitle('New Serverkey used!');
-		await client.channels.get('497400179201277992').send({
-			embed
-		});
+		await client.channels.get(settings.keychannel).send({ embed });
 
 		const redeemed = lang.useserverkey_redeemed.replace('%date', `\`${tableload.premium.end.toUTCString()}\``);
 		return msg.reply(redeemed);
@@ -58,7 +55,7 @@ exports.run = async (client, msg, args, lang) => {
 		.setTimestamp()
 		.setColor('#ff0000')
 		.setTitle('New Serverkey used!');
-	client.channels.get('419877966265319424').send({
+	await client.channels.get(settings.keychannel).send({
 		embed
 	});
 

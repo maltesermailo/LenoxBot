@@ -1,3 +1,4 @@
+const settings = require('../../settings.json');
 exports.run = async (client, msg, args, lang) => {
 	const input = args.slice();
 	const botconfspremiumload = client.botconfs.get('premium');
@@ -5,9 +6,7 @@ exports.run = async (client, msg, args, lang) => {
 	const Discord = require('discord.js');
 
 	if (!input || input.length === 0) return msg.reply(lang.useuserkey_noinput);
-	if (isNaN(input.join(' '))) return msg.reply(lang.useuserkey_error);
-	if (botconfspremiumload.keys.userkeys.contains(input.join(' '))) return msg.reply(lang.useuserkey_notexist);
-
+	if (!botconfspremiumload.keys.userkeys.includes(input.join(' '))) return msg.reply(lang.useuserkey_notexist);
 	if (botconfspremiumload.keys.redeemeduserkeys.includes(input.join(' '))) return msg.reply(lang.useuserkey_already);
 
 	if (userdb.premium.status === false) {
@@ -32,7 +31,7 @@ exports.run = async (client, msg, args, lang) => {
 			.setTimestamp()
 			.setColor('#66ff33')
 			.setTitle('New Userkey used!');
-		await client.channels.get('497400179201277992').send({
+		await client.channels.get(settings.keychannel).send({
 			embed
 		});
 
@@ -58,7 +57,7 @@ exports.run = async (client, msg, args, lang) => {
 		.setTimestamp()
 		.setColor('#66ff33')
 		.setTitle('Userkey used!');
-	client.channels.get('419877966265319424').send({
+	await client.channels.get(settings.keychannel).send({
 		embed
 	});
 
